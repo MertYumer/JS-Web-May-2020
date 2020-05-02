@@ -4,7 +4,6 @@ module.exports = class Cube {
     Id;
     Name;
     Description;
-    Filesystem
     ImageURL;
     DifficultyLevel;
 

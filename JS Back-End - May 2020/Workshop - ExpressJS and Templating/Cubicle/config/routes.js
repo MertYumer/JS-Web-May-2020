@@ -11,5 +11,7 @@ module.exports = (app) => {
 
     app.get('/details/:id', cubesController.details);
 
+    app.post('/search', cubesController.search);
+
     app.get('/not-found', cubesController.notFound);
 };

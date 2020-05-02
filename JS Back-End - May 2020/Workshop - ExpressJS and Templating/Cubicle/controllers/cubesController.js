@@ -1,11 +1,11 @@
 const cubesService = require('../services/cubesService');
 
 async function all(req, res) {
-    let allCubes = await cubesService
+    const cubes = await cubesService
         .getAllAsync()
         .catch(err => console.log(err));
 
-    res.render('index.hbs', { allCubes })
+    res.render('index.hbs', { cubes })
 }
 
 function createGet(req, res) {
@@ -13,7 +13,7 @@ function createGet(req, res) {
 }
 
 async function createPost(req, res) {
-    const { name, difficultyLevel, description, imageURL } = req.body;
+    let { name, difficultyLevel, description, imageURL } = req.body;
 
     difficultyLevel = +difficultyLevel;
 
@@ -39,7 +39,21 @@ async function details(req, res) {
         .getByIdAsync(cubeId)
         .catch(err => console.log(err));
 
-    res.render('deteils.hbs', { cube });
+    res.render('details.hbs', { cube });
+}
+
+async function search(req, res) {
+    const { search, from, to } = req.body;
+
+    if (isNaN(from) || isNaN(to)) {
+        res.redirect("/");
+    }
+
+    const cubes = await cubesService
+        .searchAsync(search, from, to)
+        .catch(err => console.log(err));
+
+    res.render('index.hbs', { search: { search, from, to }, cubes });
 }
 
 function about(req, res) {
@@ -56,6 +70,7 @@ module.exports = {
     createGet,
     createPost,
     details,
+    search,
     about,
     notFound
 };

@@ -43,7 +43,7 @@ function createAsync(name, difficultyLevel, imageURL = null, description = null)
                 return;
             }
 
-            const cubes = JSON.parse(data);
+            let cubes = JSON.parse(data);
             cubes.push(cube);
 
             fs.writeFile('./config/database.json', JSON.stringify(cubes), 'utf8', (err, data) => {
@@ -58,8 +58,32 @@ function createAsync(name, difficultyLevel, imageURL = null, description = null)
     });
 }
 
+function searchAsync(search, from, to) {
+    return new Promise(async (resolve, reject) => {
+        let cubes = await getAllAsync()
+            .catch(err => reject(err));
+
+        cubes = cubes
+            .filter(c => c.Name
+                .toLowerCase()
+                .includes(search.toLowerCase()));
+
+        if (from !== '') {
+            cubes = cubes.filter(c => c.DifficultyLevel >= +from);
+        }
+
+        if (to !== '') {
+            cubes = cubes.filter(c => c.DifficultyLevel <= +to);
+        }
+
+
+        resolve(cubes);
+    });
+}
+
 module.exports = {
     getAllAsync,
     getByIdAsync,
-    createAsync
+    createAsync,
+    searchAsync
 };
