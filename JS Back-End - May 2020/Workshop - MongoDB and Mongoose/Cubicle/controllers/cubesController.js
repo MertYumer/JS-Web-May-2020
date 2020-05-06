@@ -5,7 +5,16 @@ async function all(req, res) {
         .getAllAsync()
         .catch(err => console.log(err));
 
-    res.render('index.hbs', { cubes })
+    let cubesViewModel = [];
+
+    cubes.map(c => cubesViewModel.push({
+        id: c.id,
+        name: c.name,
+        imageUrl: c.imageUrl,
+        difficultyLevel: c.difficultyLevel
+    }));
+
+    res.render('index.hbs', { cubes: cubesViewModel });
 }
 
 function createGet(req, res) {
@@ -13,7 +22,7 @@ function createGet(req, res) {
 }
 
 async function createPost(req, res) {
-    let { name, difficultyLevel, description, imageURL } = req.body;
+    let { name, description, imageUrl, difficultyLevel } = req.body;
 
     difficultyLevel = +difficultyLevel;
 
@@ -26,7 +35,7 @@ async function createPost(req, res) {
     }
 
     await cubesService
-        .createAsync(name, difficultyLevel, description, imageURL)
+        .createAsync(name, description, imageUrl, difficultyLevel)
         .catch(err => console.log(err));
 
     res.redirect('/');
@@ -53,7 +62,16 @@ async function search(req, res) {
         .searchAsync(search, from, to)
         .catch(err => console.log(err));
 
-    res.render('index.hbs', { search: { search, from, to }, cubes });
+        let cubesViewModel = [];
+
+    cubes.map(c => cubesViewModel.push({
+        id: c.id,
+        name: c.name,
+        imageUrl: c.imageUrl,
+        difficultyLevel: c.difficultyLevel
+    }));
+
+    res.render('index.hbs', { search: { search, from, to }, cubes: cubesViewModel });
 }
 
 function about(req, res) {

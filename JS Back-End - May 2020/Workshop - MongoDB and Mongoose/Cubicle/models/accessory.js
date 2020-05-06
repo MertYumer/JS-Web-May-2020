@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const cubeSchema = new mongoose.Schema({
+const accessorySchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -21,13 +21,7 @@ const cubeSchema = new mongoose.Schema({
             message: props => `${props.value} is not a valid image URL.`
         }
     },
-    difficultyLevel: {
-        type: Number,
-        required: true,
-        min: 1,
-        max: 6
-    },
-    accessories: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Accessory' }]
+    cubes: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Cube' }]
 });
 
-module.exports = mongoose.model('Cube', cubeSchema);
+module.exports = mongoose.model('Accessory', accessorySchema);

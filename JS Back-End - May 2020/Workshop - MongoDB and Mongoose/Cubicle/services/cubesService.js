@@ -1,81 +1,50 @@
 const fs = require('fs');
-const Cube = require('../models/cube');
+const context = require('../models/index');
 
 function getAllAsync() {
-    return new Promise((resolve, reject) => {
-        fs.readFile('./config/database.json', 'utf8', (err, data) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-
-            resolve(JSON.parse(data));
-        });
-    });
+    return context.cubes.find();
 }
 
 function getByIdAsync(id) {
-    return new Promise((resolve, reject) => {
-        fs.readFile('./config/database.json', 'utf8', (err, data) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-
-            let cubes = JSON.parse(data);
-
-            if (!cubes.some(c => c.Id === id)) {
-                reject(new Error("Id does not exist!"));
-            }
-
-            resolve(cubes.filter(c => c.Id === id)[0]);
-        });
-    });
+    return context.cubes.findById(id).populate('accessories');
 }
 
-function createAsync(name, difficultyLevel, imageURL = null, description = null) {
-    return new Promise((resolve, reject) => {
-        const cube = new Cube(name, difficultyLevel, imageURL, description)
-
-        fs.readFile('./config/database.json', 'utf8', (err, data) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-
-            let cubes = JSON.parse(data);
-            cubes.push(cube);
-
-            fs.writeFile('./config/database.json', JSON.stringify(cubes), 'utf8', (err, data) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-
-                resolve();
-            });
-        });
+function createAsync(name, description = null, imageUrl = null, difficultyLevel) {
+    return context.cubes.create({
+        name: name,
+        imageUrl: imageUrl,
+        difficultyLevel: difficultyLevel,
+        description: description
     });
 }
 
 function searchAsync(search, from, to) {
+    let query = {};
+
+    if (to !== '') {
+        query = {
+            ...query,
+            difficultyLevel: { $lte: +to }
+        };
+    }
+
+    if (from !== '') {
+        query = {
+            ...query,
+            difficultyLevel: { ...query.difficultyLevel, $gte: +from }
+        };
+    }
+
     return new Promise(async (resolve, reject) => {
-        let cubes = await getAllAsync()
+        let cubes = await context
+            .cubes
+            .find(query)
             .catch(err => reject(err));
 
         cubes = cubes
-            .filter(c => c.Name
+            .filter(c => c.name
                 .toLowerCase()
                 .includes(search.toLowerCase()));
-
-        if (from !== '') {
-            cubes = cubes.filter(c => c.DifficultyLevel >= +from);
-        }
-
-        if (to !== '') {
-            cubes = cubes.filter(c => c.DifficultyLevel <= +to);
-        }
-
 
         resolve(cubes);
     });
