@@ -30,7 +30,17 @@ async function createPost(req, res) {
         res.redirect('/');
     }
 
-    if (difficultyLevel <= 0 || difficultyLevel > 6) {
+    const validateImageRegex = new RegExp('^https?://');
+
+    if (!validateImageRegex.test(imageUrl)) {
+        res.redirect('/');
+    }
+
+    if (description === null || description === '' || description.length > 100) {
+        res.redirect('/');
+    }
+
+    if (difficultyLevel < 1 || difficultyLevel > 6) {
         res.redirect('/');
     }
 
@@ -48,6 +58,10 @@ async function details(req, res) {
         .getByIdAsync(cubeId)
         .catch(err => console.log(err));
 
+    if (cube === null) {
+        return res.redirect('/not-found');
+    }
+
     res.render('details.hbs', { cube });
 }
 
@@ -62,7 +76,7 @@ async function search(req, res) {
         .searchAsync(search, from, to)
         .catch(err => console.log(err));
 
-        let cubesViewModel = [];
+    let cubesViewModel = [];
 
     cubes.map(c => cubesViewModel.push({
         id: c.id,

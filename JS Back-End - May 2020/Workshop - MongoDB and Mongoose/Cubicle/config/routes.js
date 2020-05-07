@@ -1,4 +1,5 @@
 const cubesController = require('../controllers/cubesController');
+const accessoryController = require('../controllers/accessoriesController');
 
 module.exports = (app) => {
     app.get('/', cubesController.all);
@@ -14,4 +15,10 @@ module.exports = (app) => {
     app.post('/search', cubesController.search);
 
     app.get('/not-found', cubesController.notFound);
+
+    app.get('/create/accessory', accessoryController.createGet);
+
+    app.post('/create/accessory', accessoryController.createPost);
+
+    app.get('/attach/accessory/:id', accessoryController.attachGet);
 };

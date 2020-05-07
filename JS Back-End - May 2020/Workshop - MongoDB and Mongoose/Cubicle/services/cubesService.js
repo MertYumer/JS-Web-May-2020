@@ -1,4 +1,3 @@
-const fs = require('fs');
 const context = require('../models/index');
 
 function getAllAsync() {
@@ -9,12 +8,12 @@ function getByIdAsync(id) {
     return context.cubes.findById(id).populate('accessories');
 }
 
-function createAsync(name, description = null, imageUrl = null, difficultyLevel) {
+function createAsync(name, description, imageUrl, difficultyLevel) {
     return context.cubes.create({
         name: name,
+        description: description,
         imageUrl: imageUrl,
         difficultyLevel: difficultyLevel,
-        description: description
     });
 }
 
