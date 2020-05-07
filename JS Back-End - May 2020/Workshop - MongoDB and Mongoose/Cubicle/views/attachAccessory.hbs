@@ -24,7 +24,7 @@
       <div class="form">
         <h2>{{viewModel.cube.name}}</h2>
         <img class="cube" src="{{viewModel.cube.imageUrl}}">
-        <form action='/attach/accessory/{{viewModel.cube.id}}' method="">
+        <form action='/attach/accessory/{{viewModel.cube.id}}' method="post">
           <label for="accessory">Accessories</label>
           {{#if viewModel.canAttachAccessories}}
           <select id="accessory" name="accessory">

@@ -21,4 +21,6 @@ module.exports = (app) => {
     app.post('/create/accessory', accessoryController.createPost);
 
     app.get('/attach/accessory/:id', accessoryController.attachGet);
+
+    app.post('/attach/accessory/:id', accessoryController.attachPost);
 };

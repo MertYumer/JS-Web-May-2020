@@ -15,11 +15,11 @@ async function all(req, res) {
     }));
 
     res.render('index.hbs', { cubes: cubesViewModel });
-}
+};
 
 function createGet(req, res) {
     res.render('create.hbs');
-}
+};
 
 async function createPost(req, res) {
     let { name, description, imageUrl, difficultyLevel } = req.body;
@@ -49,7 +49,7 @@ async function createPost(req, res) {
         .catch(err => console.log(err));
 
     res.redirect('/');
-}
+};
 
 async function details(req, res) {
     const cubeId = req.params.id;
@@ -63,7 +63,7 @@ async function details(req, res) {
     }
 
     res.render('details.hbs', { cube });
-}
+};
 
 async function search(req, res) {
     const { search, from, to } = req.body;
@@ -86,16 +86,16 @@ async function search(req, res) {
     }));
 
     res.render('index.hbs', { search: { search, from, to }, cubes: cubesViewModel });
-}
+};
 
 function about(req, res) {
     res.render('about.hbs');
-}
+};
 
 function notFound(req, res) {
     res.status(404);
     res.render('404.hbs');
-}
+};
 
 module.exports = {
     all,

@@ -2,11 +2,11 @@ const context = require('../models/index');
 
 function getAllAsync() {
     return context.cubes.find();
-}
+};
 
 function getByIdAsync(id) {
     return context.cubes.findById(id).populate('accessories');
-}
+};
 
 function createAsync(name, description, imageUrl, difficultyLevel) {
     return context.cubes.create({
@@ -15,7 +15,7 @@ function createAsync(name, description, imageUrl, difficultyLevel) {
         imageUrl: imageUrl,
         difficultyLevel: difficultyLevel,
     });
-}
+};
 
 function searchAsync(search, from, to) {
     let query = {};
@@ -47,7 +47,7 @@ function searchAsync(search, from, to) {
 
         resolve(cubes);
     });
-}
+};
 
 module.exports = {
     getAllAsync,

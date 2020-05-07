@@ -3,7 +3,7 @@ const cubesService = require('../services/cubesService');
 
 function createGet(req, res) {
     res.render('createAccessory.hbs');
-}
+};
 
 async function createPost(req, res) {
     let { name, description, imageUrl } = req.body;
@@ -27,7 +27,7 @@ async function createPost(req, res) {
         .catch(err => console.log(err));
 
     res.redirect('/');
-}
+};
 
 async function attachGet(req, res) {
     const cubeId = req.params.id;
@@ -57,10 +57,20 @@ async function attachGet(req, res) {
     viewModel.canAttachAccessories = viewModel.accessories.length > 0;
 
     res.render('attachAccessory.hbs', { viewModel });
-}
+};
+
+async function attachPost(req, res){
+    const cubeId = req.params.id;
+    const accessoryId = req.body.accessory;
+
+    await accessoriesService.attachToCubeAsync(cubeId, accessoryId).catch(err => console.log(err));
+
+    res.redirect('/');
+};
 
 module.exports = {
     createGet,
     createPost,
-    attachGet
+    attachGet,
+    attachPost
 };
