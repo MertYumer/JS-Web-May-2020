@@ -1,4 +1,5 @@
 const cubesService = require('../services/cubesService');
+const accessoriesService = require('../services/accessoriesService');
 
 async function all(req, res) {
     const cubes = await cubesService
@@ -54,15 +55,31 @@ async function createPost(req, res) {
 async function details(req, res) {
     const cubeId = req.params.id;
 
-    const cube = await cubesService
+    const { id, name, description, imageUrl, difficultyLevel } = await cubesService
         .getByIdAsync(cubeId)
         .catch(err => console.log(err));
 
-    if (cube === null) {
-        return res.redirect('/not-found');
-    }
+    let accessories = await accessoriesService.getAllAttachedToCubeAsync(cubeId);
 
-    res.render('details.hbs', { cube });
+    let viewModel = {
+        cube: {
+            id,
+            name,
+            description,
+            imageUrl,
+            difficultyLevel,
+            HasAccessories: accessories.length !== 0
+        },
+        accessories: []
+    };
+
+    accessories.map(a => viewModel.accessories.push({
+        name: a.name,
+        description: a.description,
+        imageUrl: a.imageUrl
+    }));
+
+    res.render('details.hbs', { viewModel });
 };
 
 async function search(req, res) {
