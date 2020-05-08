@@ -4,7 +4,7 @@ const config = require('../config/config')[env];
 const usersService = require('../services/usersService');
 
 function loginGet(req, res) {
-    res.render('login.hbs');
+    res.render('login.hbs', { user: req.cookies[config.authCookieName] });
 }
 
 async function loginPost(req, res) {
@@ -26,7 +26,7 @@ async function loginPost(req, res) {
 }
 
 function registerGet(req, res) {
-    res.render('register.hbs');
+    res.render('register.hbs', { user: req.cookies[config.authCookieName] });
 }
 
 async function registerPost(req, res) {

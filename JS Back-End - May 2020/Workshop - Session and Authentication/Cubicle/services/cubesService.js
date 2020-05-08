@@ -8,12 +8,13 @@ function getByIdAsync(id) {
     return context.cubes.findById(id).populate('accessories');
 };
 
-function createAsync(name, description, imageUrl, difficultyLevel) {
+function createAsync(name, description, imageUrl, difficultyLevel, creatorId) {
     return context.cubes.create({
         name: name,
         description: description,
         imageUrl: imageUrl,
         difficultyLevel: difficultyLevel,
+        creatorId: creatorId
     });
 };
 

@@ -1,3 +1,6 @@
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config')[env];
+
 const cubesService = require('../services/cubesService');
 const accessoriesService = require('../services/accessoriesService');
 
@@ -15,11 +18,11 @@ async function all(req, res) {
         difficultyLevel: c.difficultyLevel
     }));
 
-    res.render('index.hbs', { cubes: cubesViewModel });
+    res.render('index.hbs', { user: req.cookies[config.authCookieName], cubes: cubesViewModel });
 };
 
 function createGet(req, res) {
-    res.render('create.hbs');
+    res.render('create.hbs', { user: req.cookies[config.authCookieName] });
 };
 
 async function createPost(req, res) {
@@ -45,8 +48,10 @@ async function createPost(req, res) {
         res.redirect('/');
     }
 
+    const user = req.user;
+
     await cubesService
-        .createAsync(name, description, imageUrl, difficultyLevel)
+        .createAsync(name, description, imageUrl, difficultyLevel, user.id)
         .catch(err => console.log(err));
 
     res.redirect('/');
@@ -62,6 +67,7 @@ async function details(req, res) {
     let accessories = await accessoriesService.getAllAttachedToCubeAsync(cubeId);
 
     let viewModel = {
+        user: req.cookies[config.authCookieName],
         cube: {
             id,
             name,
@@ -102,7 +108,7 @@ async function search(req, res) {
         difficultyLevel: c.difficultyLevel
     }));
 
-    res.render('index.hbs', { search: { search, from, to }, cubes: cubesViewModel });
+    res.render('index.hbs', { user: req.cookies[config.authCookieName], search: { search, from, to }, cubes: cubesViewModel });
 };
 
 function about(req, res) {

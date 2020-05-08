@@ -12,13 +12,13 @@ function auth() {
             jwt.verifyToken(token),
         ]).then(([data]) => {
             context.users
-                .findById(data.id)
+                .findById(data.data.id)
                 .then(user => {
                     req.user = user;
                     next();
                 });
         }).catch(err => {
-            if (['token expired', 'jwt must be provided'].includes(err.message)) {
+            if (['jwt expired', 'jwt must be provided'].includes(err.message)) {
                 res.redirect('/login');
                 return;
             }

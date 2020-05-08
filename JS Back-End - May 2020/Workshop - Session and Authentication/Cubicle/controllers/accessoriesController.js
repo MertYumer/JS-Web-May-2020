@@ -1,8 +1,11 @@
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config')[env];
+
 const accessoriesService = require('../services/accessoriesService');
 const cubesService = require('../services/cubesService');
 
 function createGet(req, res) {
-    res.render('createAccessory.hbs');
+    res.render('createAccessory.hbs', { user: req.cookies[config.authCookieName] });
 };
 
 async function createPost(req, res) {
@@ -41,6 +44,7 @@ async function attachGet(req, res) {
     const accessories = await accessoriesService.getAllUnattachedToCubeAsync(cubeId);
 
     let viewModel = {
+        user: req.cookies[config.authCookieName],
         cube: {
             id: cube.id,
             name: cube.name,
@@ -59,7 +63,7 @@ async function attachGet(req, res) {
     res.render('attachAccessory.hbs', { viewModel });
 };
 
-async function attachPost(req, res){
+async function attachPost(req, res) {
     const cubeId = req.params.id;
     const accessoryId = req.body.accessory;
 
