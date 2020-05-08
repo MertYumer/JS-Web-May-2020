@@ -18,6 +18,17 @@ function createAsync(name, description, imageUrl, difficultyLevel, creatorId) {
     });
 };
 
+function editAsync(id, name, description, imageUrl, difficultyLevel) {
+    return context.cubes.updateOne(
+        { _id: id },
+        { name, description, imageUrl, difficultyLevel }
+    );
+};
+
+async function deleteAsync(id){
+    return context.cubes.deleteOne({_id: id});
+}
+
 function searchAsync(search, from, to) {
     let query = {};
 
@@ -50,9 +61,18 @@ function searchAsync(search, from, to) {
     });
 };
 
+async function isCreatedByUserAsync(cubeId, userId) {
+    const cube = await context.cubes.findOne({ _id: cubeId, creatorId: userId });
+
+    return cube !== null;
+}
+
 module.exports = {
     getAllAsync,
     getByIdAsync,
     createAsync,
-    searchAsync
+    editAsync,
+    deleteAsync,
+    searchAsync,
+    isCreatedByUserAsync
 };

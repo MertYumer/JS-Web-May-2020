@@ -111,14 +111,97 @@ async function search(req, res) {
     res.render('index.hbs', { user: req.cookies[config.authCookieName], search: { search, from, to }, cubes: cubesViewModel });
 };
 
-function about(req, res) {
-    res.render('about.hbs');
+async function editGet(req, res) {
+    const user = req.user;
+    const cubeId = req.params.id;
+
+    const isUserCubeCreator = await cubesService.isCreatedByUserAsync(cubeId, user.id)
+
+    if (!isUserCubeCreator) {
+        res.redirect('/');
+        return;
+    }
+
+    const cube = await cubesService.getByIdAsync(cubeId);
+
+    const viewModel = {
+        user: req.cookies[config.authCookieName],
+        cube: {
+            id: cube.id,
+            name: cube.name,
+            imageUrl: cube.imageUrl,
+            description: cube.description,
+            difficultyLevel: cube.difficultyLevel
+        }
+    };
+
+    res.render('editCube.hbs', { viewModel });
 };
 
-function notFound(req, res) {
-    res.status(404);
-    res.render('404.hbs');
+async function editPost(req, res) {
+    let { name, description, imageUrl, difficultyLevel } = req.body;
+    const cubeId = req.params.id;
+
+    difficultyLevel = +difficultyLevel;
+
+    if (name === null || name === '') {
+        res.redirect('/');
+    }
+
+    const validateImageRegex = new RegExp('^https?://');
+
+    if (!validateImageRegex.test(imageUrl)) {
+        res.redirect('/');
+    }
+
+    if (description === null || description === '' || description.length > 100) {
+        res.redirect('/');
+    }
+
+    if (difficultyLevel < 1 || difficultyLevel > 6) {
+        res.redirect('/');
+    }
+
+    await cubesService
+        .editAsync(cubeId, name, description, imageUrl, difficultyLevel)
+        .catch(err => console.log(err));
+
+    res.redirect('/details/' + cubeId);
+}
+
+async function deleteGet(req, res) {
+    const user = req.user;
+    const cubeId = req.params.id;
+
+    const isUserCubeCreator = await cubesService.isCreatedByUserAsync(cubeId, user.id)
+
+    if (!isUserCubeCreator) {
+        res.redirect('/');
+        return;
+    }
+
+    const cube = await cubesService.getByIdAsync(cubeId);
+
+    const viewModel = {
+        user: req.cookies[config.authCookieName],
+        cube: {
+            id: cube.id,
+            name: cube.name,
+            imageUrl: cube.imageUrl,
+            description: cube.description,
+            difficultyLevel: cube.difficultyLevel
+        }
+    };
+
+    res.render('deleteCube.hbs', { viewModel });
 };
+
+async function deletePost(req, res){
+    const id = req.params.id;
+
+    await cubesService.deleteAsync(id);
+    res.redirect('/');
+}
 
 module.exports = {
     all,
@@ -126,6 +209,8 @@ module.exports = {
     createPost,
     details,
     search,
-    about,
-    notFound
+    editGet,
+    editPost,
+    deleteGet,
+    deletePost
 };

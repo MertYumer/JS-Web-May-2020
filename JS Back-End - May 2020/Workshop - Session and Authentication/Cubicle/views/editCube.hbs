@@ -17,7 +17,7 @@
         <li><a href="/create">Add a Cube</a></li>
         <li><a href="/create/accessory">Add Accessory</a></li>
         <li><a href="/about">About</a></li>
-        {{#if user}}
+        {{#if viewModel.user}}
         <li><a href="/logout">Logout</a></li>
         {{else}}
         <li><a href="/login">Login</a></li>
@@ -28,15 +28,16 @@
     <main>
 	<h1>Edit Cube</h1>
 <div class="form">
-  <form action='/' method="POST">
+  <form action='/edit/{{viewModel.cube.id}}' method="POST">
     <label for="name">Name</label>
-    <input type="text" id="name" name="name" value="">
+    <input type="text" id="name" name="name" value="{{viewModel.cube.name}}">
     <label for="name">Description</label>
-    <textarea id="name" name="description"></textarea>
+    <textarea id="name" name="description">{{viewModel.cube.description}}</textarea>
     <label for="image">ImageUrl</label>
-    <input type="text" id="image" name="imageUrl" value="">
+    <input type="text" id="image" name="imageUrl" value="{{viewModel.cube.imageUrl}}">
     <label for="difficulty">Difficulty</label>
     <select id="difficulty" name="difficultyLevel">
+      <option disabled selected>{{viewModel.cube.difficultyLevel}}</option>
       <option value="1">1 - Very Easy</option>
       <option value="2">2 - Easy</option>
       <option value="3">3 - Medium (Standard 3x3)</option>
