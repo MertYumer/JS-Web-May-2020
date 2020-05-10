@@ -26,6 +26,11 @@
       </ul>
     </header>
     <main>
+      {{#if error}}
+      <div id="notifications">
+        <p id="notification-message">{{error}}</p>
+      </div>
+      {{/if}}
       <h1>Create</h1>
       <div class="form">
         <form action='/create' method="post">

@@ -22,37 +22,56 @@ async function all(req, res) {
 };
 
 function createGet(req, res) {
-    res.render('create.hbs', { user: req.cookies[config.authCookieName] });
+    const error = req.query.error;
+
+    res.render('create.hbs', { user: req.cookies[config.authCookieName], error });
 };
 
 async function createPost(req, res) {
     let { name, description, imageUrl, difficultyLevel } = req.body;
 
     difficultyLevel = +difficultyLevel;
+    let error = '';
 
-    if (name === null || name === '') {
-        res.redirect('/');
+    const validateNameAndDescriptionRegex = new RegExp('^[A-Za-z0-9 ]+$');
+
+    if (name === null 
+        || name === '' 
+        || name.length < 5 
+        || !validateNameAndDescriptionRegex.test(name)) {
+        error += 'Name is not valid.\n';
+    }
+
+    if (description === null
+        || description === ''
+        || description.length < 20
+        || !validateNameAndDescriptionRegex.test(description)) {
+        error += 'Description is not valid.\n';
     }
 
     const validateImageRegex = new RegExp('^https?://');
 
     if (!validateImageRegex.test(imageUrl)) {
-        res.redirect('/');
-    }
-
-    if (description === null || description === '' || description.length > 100) {
-        res.redirect('/');
+        error += 'Image must have a valid URL.\n';
     }
 
     if (difficultyLevel < 1 || difficultyLevel > 6) {
-        res.redirect('/');
+        error += 'Difficulty level must be between 1 and 6.\n';
+    }
+
+    if (error !== '') {
+        res.redirect(`/create?error=${error}`);
+        return;
     }
 
     const user = req.user;
 
     await cubesService
         .createAsync(name, description, imageUrl, difficultyLevel, user.id)
-        .catch(err => console.log(err));
+        .catch(err => {
+            res.redirect(`/create?error=${error}`);
+            return;
+        });
 
     res.redirect('/');
 };
@@ -196,7 +215,7 @@ async function deleteGet(req, res) {
     res.render('deleteCube.hbs', { viewModel });
 };
 
-async function deletePost(req, res){
+async function deletePost(req, res) {
     const id = req.params.id;
 
     await cubesService.deleteAsync(id);

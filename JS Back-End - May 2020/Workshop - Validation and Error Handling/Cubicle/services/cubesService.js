@@ -25,8 +25,8 @@ function editAsync(id, name, description, imageUrl, difficultyLevel) {
     );
 };
 
-async function deleteAsync(id){
-    return context.cubes.deleteOne({_id: id});
+async function deleteAsync(id) {
+    return context.cubes.deleteOne({ _id: id });
 }
 
 function searchAsync(search, from, to) {

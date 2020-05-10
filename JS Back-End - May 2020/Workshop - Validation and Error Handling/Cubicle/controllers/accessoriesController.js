@@ -5,29 +5,49 @@ const accessoriesService = require('../services/accessoriesService');
 const cubesService = require('../services/cubesService');
 
 function createGet(req, res) {
-    res.render('createAccessory.hbs', { user: req.cookies[config.authCookieName] });
+    const error = req.query.error;
+
+    res.render('createAccessory.hbs', { user: req.cookies[config.authCookieName], error });
 };
 
 async function createPost(req, res) {
     let { name, description, imageUrl } = req.body;
 
-    if (name === null || name === '') {
-        res.redirect('/');
+    let error = '';
+
+    const validateNameAndDescriptionRegex = new RegExp('^[A-Za-z0-9 ]+$');
+
+    if (name === null 
+        || name === '' 
+        || name.length < 5 
+        || !validateNameAndDescriptionRegex.test(name)) {
+        error += 'Name is not valid.\n';
+    }
+
+    if (description === null
+        || description === ''
+        || description.length < 20
+        || !validateNameAndDescriptionRegex.test(description)) {
+        error += 'Description is not valid.\n';
     }
 
     const validateImageRegex = new RegExp('^https?://');
 
     if (!validateImageRegex.test(imageUrl)) {
-        res.redirect('/');
+        error += 'Image must have a valid URL.\n';
     }
 
-    if (description === null || description === '' || description.length > 100) {
-        res.redirect('/');
+    if(error !== '') {
+        res.redirect(`/create/accessory?error=${error}`);
+        return;
     }
 
     await accessoriesService
         .createAsync(name, description, imageUrl)
-        .catch(err => console.log(err));
+        .catch(err => {
+            res.redirect(`/create/accessory?error=${err.message}`); 
+            return;
+        });
 
     res.redirect('/');
 };
