@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
 const saltRounds = 10;
 
 const Schema = mongoose.Schema;
@@ -26,15 +26,15 @@ const userSchema = new Schema({
 userSchema.methods = {
 
     matchPassword: function (password) {
-        return bcrypt.compare(password, this.password);
+        return bcryptjs.compare(password, this.password);
     }
 
 };
 
 userSchema.pre('save', function (next) {
     if (this.isModified('password')) {
-        bcrypt.genSalt(saltRounds, (err, salt) => {
-            bcrypt.hash(this.password, salt, (err, hash) => {
+        bcryptjs.genSalt(saltRounds, (err, salt) => {
+            bcryptjs.hash(this.password, salt, (err, hash) => {
                 if (err) { next(err); return }
                 this.password = hash;
                 next();
