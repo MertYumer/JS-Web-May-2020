@@ -24,7 +24,7 @@ class Posts extends Component {
                 <h1>{title}</h1>
                 <div className='Posts'>
                     {posts
-                        ? posts.map(post => <Post key={post._id} author={post.author} imgUrl='/blue-origami-bird.png'>{post.description}</Post>)
+                        ? posts.map(post => <Post key={post._id} author={post.author.username} imgUrl='/blue-origami-bird.png'>{post.description}</Post>)
                         : <div>Loading...</div>}
                 </div>
             </Fragment>
