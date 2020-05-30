@@ -11,9 +11,11 @@ function Navigation() {
                 <Link url='#'>
                     <img id="logo" src="/white-origami-bird.png" alt="my-app-logo" />
                 </Link>
-                <Link url='#'>Link 1</Link>
-                <Link url='#'>Link 2</Link>
-                <Link url='#'>Link 3</Link>
+                <Link url='/'>Posts</Link>
+                <Link url='/share'>Share</Link>
+                <Link url='/profile'>Profile</Link>
+                <Link url='/register'>Register</Link>
+                <Link url='/login'>Login</Link>
             </ul>
         </nav>
     );

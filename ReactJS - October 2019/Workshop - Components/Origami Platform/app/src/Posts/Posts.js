@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import './Posts.css';
 
@@ -16,19 +16,22 @@ class Posts extends Component {
     }
 
     render() {
-
         const { posts } = this.state;
+        const { title } = this.props;
 
         return (
-            <div className='Posts'>
-                {posts ?
-                    posts.map(post => <Post key={post._id} author={post.author} imgUrl='/blue-origami-bird.png'>{post.description}</Post>)
-                    : <div>Loading...</div>}
-            </div>
+            <Fragment>
+                <h1>{title}</h1>
+                <div className='Posts'>
+                    {posts
+                        ? posts.map(post => <Post key={post._id} author={post.author} imgUrl='/blue-origami-bird.png'>{post.description}</Post>)
+                        : <div>Loading...</div>}
+                </div>
+            </Fragment>
         );
     }
 
-    async componentDidMount(){
+    async componentDidMount() {
         let posts = await service.getAll();
 
         this.setState({ posts });
