@@ -6,10 +6,10 @@ import Link from '../shared/Link/Link';
 
 function Navigation() {
     return (
-        <nav className="Navigation">
+        <nav className='Navigation'>
             <ul>
                 <Link url='#'>
-                    <img id="logo" src="/white-origami-bird.png" alt="my-app-logo" />
+                    <img id='logo' src='/white-origami-bird.png' alt='my-app-logo' />
                 </Link>
                 <Link url='/'>Posts</Link>
                 <Link url='/share'>Share</Link>

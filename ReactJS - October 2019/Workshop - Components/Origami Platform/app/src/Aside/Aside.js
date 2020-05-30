@@ -6,7 +6,7 @@ import Link from '../shared/Link/Link';
 
 function Aside() {
     return (
-        <aside className="Aside">
+        <aside className='Aside'>
             <ul>
                 <Link url='#'>Link 1</Link>
                 <Link url='#'>Link 2</Link>

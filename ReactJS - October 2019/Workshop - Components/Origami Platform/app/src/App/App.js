@@ -24,17 +24,17 @@ function render(title, Cmp) {
 function App() {
   return (
     <BrowserRouter>
-      <div className="App">
+      <div className='App'>
         <Navigation />
-        <div className="Container">
+        <div className='Container'>
           <Aside />
           <Switch>
-            <Route path='/' exact render={render('Posts', Posts)}/>
-            <Route path='/register' render={render('', Register)}/>
-            <Route path='/login' render={render('', Login)}/>
-            <Route path='/profile' render={render('', Profile)}/>
-            <Route path='/share' render={render('', ShareThought)}/>
-            <Route path='*' render={render('Something went wrong', NotFound)}/>
+            <Route path='/' exact render={render('Publications', Posts)} />
+            <Route path='/register' render={render('', Register)} />
+            <Route path='/login' render={render('', Login)} />
+            <Route path='/profile' render={render('', Profile)} />
+            <Route path='/share' render={render('', ShareThought)} />
+            <Route path='*' render={render('Something went wrong', NotFound)} />
           </Switch>
         </div>
         <Footer />

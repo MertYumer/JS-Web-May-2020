@@ -32,8 +32,14 @@ class Posts extends Component {
     }
 
     async componentDidMount() {
+        const { count } = this.props;
+
         let posts = await service.getAll();
 
+        if(count !== undefined){
+            posts = posts.slice(0, count);
+        }
+        
         this.setState({ posts });
     }
 }
