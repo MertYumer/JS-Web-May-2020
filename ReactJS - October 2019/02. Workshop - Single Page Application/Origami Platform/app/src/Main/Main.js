@@ -2,13 +2,11 @@ import React from 'react';
 
 import './Main.css';
 
-import Posts from '../Posts/Posts';
-
-function Main() {
+function Main({ children, title }) {
     return (
-        <main className="Main">
-            <h1>Sooooooooome Heading</h1>
-            <Posts />
+        <main className='Main'>
+            <h1>{title}</h1>
+            {children}
         </main>
     );
 }
