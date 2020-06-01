@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import '../shared/styles/LoginAndRegister.css';
 
 import withForm from '../shared/hocs/withForm';
+import usersService from '../services/usersService';
 
 class Register extends React.Component {
     usernameOnChangeHandler = this.props.controlChangeHandlerFactory('username');
@@ -13,7 +14,14 @@ class Register extends React.Component {
     submitHandler = () => {
         const errors = this.props.getFormErrorState();
         if (!!errors) { return; }
+
         const data = this.props.getFormState();
+
+        usersService
+            .register(data)
+            .then(() => {
+                this.props.history.push('/login');
+            });
     }
 
     getFirstControlError = name => {
@@ -71,9 +79,9 @@ const schema = yup.object({
 
     rePassword: yup
         .string('Password must be a string')
-        .oneOf([yup.ref('password'), ''], 'Passwords don\'t match')
-        .required('Password is required')
-        .min(6, 'Password must be more than 6 chars')
+    //.oneOf([yup.ref('password'), ''], 'Passwords don\'t match')
+    //.required('Password is required')
+    //.min(6, 'Password must be more than 6 chars')
 });
 
 export default withForm(Register, initialFormState, schema);
