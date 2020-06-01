@@ -24,6 +24,15 @@ const usersService = {
             credentials: 'include',
             body: JSON.stringify(data)
         }).then(resp => resp.text());
+    },
+
+    logout: function () {
+        const url = baseUrl + '/logout';
+
+        return fetch(url, {
+            method: 'POST',
+            credentials: 'include'
+        }).then(res => res.text());
     }
 }
 export default usersService;

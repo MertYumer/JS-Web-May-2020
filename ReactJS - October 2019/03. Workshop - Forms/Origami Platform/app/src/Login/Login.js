@@ -19,7 +19,7 @@ class Login extends React.Component {
         usersService
             .login(data)
             .then(() => {
-                this.props.history.push('/');
+                this.props.login(this.props.history, data);
             });
     }
 

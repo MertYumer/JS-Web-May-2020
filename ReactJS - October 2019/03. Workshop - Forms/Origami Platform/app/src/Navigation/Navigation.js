@@ -4,7 +4,7 @@ import './Navigation.css';
 
 import Link from '../shared/Link/Link';
 
-function Navigation() {
+function Navigation({ isLogged }) {
     return (
         <nav className='Navigation'>
             <ul>
@@ -12,10 +12,11 @@ function Navigation() {
                     <img id='logo' src='/white-origami-bird.png' alt='my-app-logo' />
                 </Link>
                 <Link url='/'>Posts</Link>
-                <Link url='/share'>Share</Link>
-                <Link url='/profile'>Profile</Link>
-                <Link url='/register'>Register</Link>
-                <Link url='/login'>Login</Link>
+                {isLogged && <Link url='/share'>Share</Link>}
+                {isLogged && <Link url='/profile'>Profile</Link>}
+                {!isLogged && <Link url='/register'>Register</Link>}
+                {!isLogged && <Link url='/login'>Login</Link>}
+                {isLogged && <Link url="/logout">Logout</Link>}
             </ul>
         </nav>
     );

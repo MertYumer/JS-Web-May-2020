@@ -7,40 +7,81 @@ import Navigation from '../Navigation/Navigation';
 import Aside from '../Aside/Aside';
 import Main from '../Main/Main';
 import Footer from '../Footer/Footer';
-
 import Register from '../Register/Register';
 import Login from '../Login/Login';
+import Logout from '../Logout/Logout';
 import Profile from '../Profile/Profile';
 import Posts from '../Posts/Posts';
 import ShareThought from '../ShareThought/ShareThought';
 import NotFound from '../NotFound/NotFound';
 
-function render(title, Cmp) {
+import usersService from '../services/usersService';
+
+function render(title, Cmp, otherProps) {
   return function (props) {
-    return <Main><Cmp title={title} {...props} /></Main>
+    return <Main><Cmp title={title} {...props} {...otherProps} /></Main>
   };
 }
 
-function App() {
-  return (
-    <BrowserRouter>
-      <div className='App'>
-        <Navigation />
-        <div className='Container'>
-          <Aside />
-          <Switch>
-            <Route path='/' exact render={render('Publications', Posts)} />
-            <Route path='/register' render={render('', Register)} />
-            <Route path='/login' render={render('', Login)} />
-            <Route path='/profile' render={render('', Profile)} />
-            <Route path='/share' render={render('', ShareThought)} />
-            <Route path='*' render={render('Something went wrong', NotFound)} />
-          </Switch>
+function parseCookies() {
+  return document.cookie.split('; ').reduce((acc, cookie) => {
+    const [cookieName, cookieValue] = cookie.split('=');
+    acc[cookieName] = cookieValue;
+    return acc;
+  }, {})
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    const cookies = parseCookies();
+    const isLogged = !!cookies['x-auth-token'];
+    this.state = { isLogged };
+  }
+
+  login = (history, data) => {
+    usersService
+      .login(data)
+      .then(() => {
+        this.setState({ isLogged: true });
+        history.push('/');
+      });
+  }
+
+  logout = (history) => {
+    usersService
+      .logout()
+      .then(() => {
+        this.setState({ isLogged: false });
+        history.push('/');
+        return null;
+      });
+  }
+
+  render() {
+    const { isLogged } = this.state;
+
+    return (
+      <BrowserRouter>
+        <div className='App'>
+          <Navigation isLogged={isLogged} />
+          <div className='Container'>
+            <Aside isLogged={isLogged} />
+            <Switch>
+              <Route path='/' exact render={render('Publications', Posts)} />
+              <Route path='/register' render={render('', Register, { isLogged })} />
+              <Route path='/login' render={render('', Login, { isLogged, login: this.login })} />
+              <Route path='/logout' render={render('', Logout, { isLogged, logout: this.logout })} />
+              <Route path='/profile' render={render('', Profile, { isLogged })} />
+              <Route path='/share' render={render('', ShareThought, { isLogged })} />
+              <Route path='*' render={render('Something went wrong', NotFound)} />
+            </Switch>
+          </div>
+          <Footer isLogged={isLogged} />
         </div>
-        <Footer />
-      </div>
-    </BrowserRouter>
-  );
+      </BrowserRouter>
+    );
+  }
 }
 
 export default App;
