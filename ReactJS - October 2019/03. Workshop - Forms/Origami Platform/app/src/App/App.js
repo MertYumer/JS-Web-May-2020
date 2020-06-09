@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import './App.css';
 
@@ -68,12 +68,13 @@ class App extends React.Component {
           <div className='Container'>
             <Aside isLogged={isLogged} />
             <Switch>
-              <Route path='/' exact render={render('Publications', Posts)} />
-              <Route path='/register' render={render('', Register, { isLogged })} />
-              <Route path='/login' render={render('', Login, { isLogged, login: this.login })} />
-              <Route path='/logout' render={render('', Logout, { isLogged, logout: this.logout })} />
-              <Route path='/profile' render={render('', Profile, { isLogged })} />
-              <Route path='/share' render={render('', ShareThought, { isLogged })} />
+              <Route path='/' exact><Redirect to="/posts" /></Route>
+              <Route path='/posts' render={render('Posts', Posts, { isLogged })} />
+              <Route path='/register' render={render('Register', Register, { isLogged })} />
+              <Route path='/login' render={render('Login', Login, { isLogged, login: this.login })} />
+              <Route path='/logout' render={render('Logout', Logout, { isLogged, logout: this.logout })} />
+              <Route path='/profile' render={render('Profile', Profile, { isLogged })} />
+              <Route path='/share' render={render('Share thought', ShareThought, { isLogged })} />
               <Route path='*' render={render('Something went wrong', NotFound)} />
             </Switch>
           </div>

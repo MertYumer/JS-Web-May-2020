@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 
 import './Posts.css';
 
@@ -10,59 +11,27 @@ const Posts = ({ limit }) => {
     const [posts, setPosts] = React.useState(null);
 
     React.useEffect(() => {
-        service.getAll(null, limit).then(posts => {
-          setPosts(posts);
-        });
-      }, [limit]);
+        service.getAll(limit)
+            .then(posts => {
+                setPosts(posts);
+            });
+    }, [limit]);
 
     return (
         <Fragment>
             <h1>Publications</h1>
-            <div className='Posts'>
+            <div className="Posts">
                 {posts
                     ? posts.map(post => <Post key={post._id} author={post.author.username} imgUrl='/blue-origami-bird.png'>{post.description}</Post>)
-                    : <div>Loading...</div>}
+                    : <div>Loading...</div>
+                }
             </div>
         </Fragment>
     );
 }
 
-// class Posts extends Component {
-//     constructor() {
-//         super();
-
-//         this.state = {
-//             posts: null
-//         };
-//     }
-
-//     render() {
-//         const { posts } = this.state;
-//         const { title } = this.props;
-
-//         return (
-//             <Fragment>
-//                 <h1>{title}</h1>
-//                 <div className='Posts'>
-//                     {posts
-//                         ? posts.map(post => <Post key={post._id} author={post.author.username} imgUrl='/blue-origami-bird.png'>{post.description}</Post>)
-//                         : <div>Loading...</div>}
-//                 </div>
-//             </Fragment>
-//         );
-//     }
-
-//     async componentDidMount() {
-//         const { count } = this.props;
-
-//         let posts = await service.getAll();
-
-//         if (count !== undefined) {
-//             posts = posts.slice(0, count);
-//         }
-
-//         this.setState({ posts });
-//     }
-//}
+Posts.propTypes = {
+    limit: PropTypes.number
+};
 
 export default Posts;

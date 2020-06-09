@@ -12,7 +12,7 @@ function Profile() {
                 <p><span>Email:</span>testemail@abv.bg</p>
                 <p><span>Posts:</span>10</p>
             </div>
-            <Posts title='3 of your posts' count='3'></Posts>
+            <Posts title='3 of your posts' limit={3} ></Posts>
         </div>
     );
 }
