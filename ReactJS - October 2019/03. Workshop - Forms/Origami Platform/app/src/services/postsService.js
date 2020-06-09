@@ -1,9 +1,9 @@
 const baseUrl = 'http://localhost:9999/api/';
 
 const postsService = {
-    getAll: function () {
-        const url = baseUrl + 'origami/';
-        return fetch(url).then(resp => resp.json());
+    getAll: function (id, limit) {
+        const url = baseUrl + `origami${id ? `/${id}` : ''}${limit ? `?limit=${limit}` : ''}`;
+        return fetch(url).then(res => res.json());
     }
 }
 

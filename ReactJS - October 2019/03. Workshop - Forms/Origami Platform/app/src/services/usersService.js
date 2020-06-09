@@ -10,7 +10,7 @@ const usersService = {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(resp => resp.json());
+        }).then(res => res.json());
     },
 
     login: function (data) {
@@ -23,7 +23,7 @@ const usersService = {
             },
             credentials: 'include',
             body: JSON.stringify(data)
-        }).then(resp => resp.text());
+        }).then(res => res.text().then(text => res.status === 200 ? text : Promise.reject(text)));
     },
 
     logout: function () {

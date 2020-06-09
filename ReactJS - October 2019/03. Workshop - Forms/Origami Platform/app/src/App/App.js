@@ -40,7 +40,7 @@ class App extends React.Component {
   }
 
   login = (history, data) => {
-    usersService
+    return usersService
       .login(data)
       .then(() => {
         this.setState({ isLogged: true });

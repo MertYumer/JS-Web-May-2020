@@ -47,12 +47,14 @@ export default function withForm(Cmp, initialState, schema) {
         };
 
         runControlValidation = name => {
+            if (!schema) { return Promise.resolve(); }
             const currentValue = this.state.form[name];
-            return schema && schema.fields[name].validate(currentValue, { abortEarly: false }) || Promise.resolve();
+            return schema.fields[name].validate(currentValue, { abortEarly: false });
         };
 
         runValidations = () => {
-            return schema && schema.validate(this.state.form, { abortEarly: false })
+            if (!schema) { return Promise.resolve(); }
+            return schema.validate(this.state.form, { abortEarly: false })
                 .then(() => {
                     this.setState({ errors: undefined });
                     return this.state.form;
@@ -63,7 +65,7 @@ export default function withForm(Cmp, initialState, schema) {
                     }, {});
 
                     this.setState({ errors });
-                }) || Promise.resolve();
+                });
         }
 
         render() {
