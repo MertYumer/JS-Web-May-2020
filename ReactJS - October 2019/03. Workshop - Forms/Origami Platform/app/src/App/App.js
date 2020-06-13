@@ -53,8 +53,7 @@ class App extends React.Component {
       .logout()
       .then(() => {
         this.setState({ isLogged: false });
-        history.push('/');
-        return null;
+        history.push('/', {});
       });
   }
 
@@ -68,7 +67,7 @@ class App extends React.Component {
           <div className='Container'>
             <Aside isLogged={isLogged} />
             <Switch>
-              <Route path='/' exact><Redirect to="/posts" /></Route>
+              <Route path='/' exact><Redirect to='/posts' /></Route>
               <Route path='/posts' render={render('Posts', Posts, { isLogged })} />
               <Route path='/register' render={render('Register', Register, { isLogged })} />
               <Route path='/login' render={render('Login', Login, { isLogged, login: this.login })} />

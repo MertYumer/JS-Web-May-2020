@@ -11,7 +11,8 @@ const Posts = ({ limit }) => {
     const [posts, setPosts] = React.useState(null);
 
     React.useEffect(() => {
-        service.getAll(limit)
+        service
+            .getAll(limit)
             .then(posts => {
                 setPosts(posts);
             });
