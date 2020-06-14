@@ -14,12 +14,15 @@ import Profile from '../Profile/Profile';
 import Posts from '../Posts/Posts';
 import ShareThought from '../ShareThought/ShareThought';
 import NotFound from '../NotFound/NotFound';
+import ProtectedRoute from '../shared/ProtectedRoute/ProtectedRoute';
 
 import usersService from '../services/usersService';
 
-function render(title, Cmp, otherProps) {
+function render(title, Cmp, otherProps, isProtected) {
   return function (props) {
-    return <Main><Cmp title={title} {...props} {...otherProps} /></Main>
+    return !isProtected
+      ? <Main><Cmp title={title} {...props} {...otherProps} /></Main>
+      : <Redirect to="/" />
   };
 }
 
@@ -73,7 +76,7 @@ class App extends React.Component {
               <Route path='/login' render={render('Login', Login, { isLogged, login: this.login })} />
               <Route path='/logout' render={render('Logout', Logout, { isLogged, logout: this.logout })} />
               <Route path='/profile' render={render('Profile', Profile, { isLogged })} />
-              <Route path='/share' render={render('Share thought', ShareThought, { isLogged })} />
+              <ProtectedRoute isLogged={isLogged} redirectTo="/" path="/share" exact render={render('Share Thought', ShareThought, { isLogged })} />
               <Route path='*' render={render('Something went wrong', NotFound)} />
             </Switch>
           </div>
