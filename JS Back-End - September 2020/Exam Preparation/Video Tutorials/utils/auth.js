@@ -1,18 +1,8 @@
-const env = process.env.NODE_ENV;
+const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
 const jwt = require('jsonwebtoken');
 const controller = require('../controllers/users');
 const { TOKEN_KEY } = require('../controllers/constants');
-
-const generateToken = (username, userId) => {
-	const data = {
-		username,
-		userID: userId
-	};
-
-	const token = jwt.sign(data, config.secret);
-	return token;
-};
 
 const authenticationCheck = (req, res, next) => {
 	const token = req.cookies[TOKEN_KEY];

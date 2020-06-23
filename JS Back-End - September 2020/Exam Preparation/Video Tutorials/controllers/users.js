@@ -1,6 +1,8 @@
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config')[env];
+const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 
-const { generateToken } = require('../utils/auth');
 const User = require('../models/User');
 
 const {
@@ -80,14 +82,13 @@ module.exports = {
             const hashedPassword = errorMessages.length > 0 ? null : await hashPassword(password);
 
             const user = new User({ username, password: hashedPassword });
-            
+            let success = true;
+            let userId;
+
             try {
                 const { _id } = await user.save();
+                userId = _id;
 
-                const token = generateToken(username, _id);
-                res.cookie(TOKEN_KEY, token);
-                res.cookie(USERNAME, username);
-                res.redirect('/');
             } catch (error) {
                 if (error.name === 'MongoError') {
                     errorMessages.push(USERNAME_EXISTS_MESSAGE);
@@ -96,7 +97,21 @@ module.exports = {
                         errorMessages.push(error.errors[x].message);
                     });
                 }
+                
+                success = false;
+            }
 
+            if(success) {
+                const data = {
+                    username,
+                    userId
+                };
+            
+                const token = jwt.sign(data, config.secret);
+                res.cookie(TOKEN_KEY, token);
+                res.cookie(USERNAME, username);
+                res.redirect('/');
+            } else {
                 const { isLoggedIn } = req;
                 res.render('register', { isLoggedIn, errorMessages, username });
             }
