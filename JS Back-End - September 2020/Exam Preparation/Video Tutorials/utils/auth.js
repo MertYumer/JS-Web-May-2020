@@ -73,7 +73,6 @@ const notCreatorRestriction = async (req, res, next) => {
 };
 
 module.exports = {
-	generateToken,
 	authenticationCheck,
 	anonymousRestriction,
 	getUserId,

@@ -55,7 +55,13 @@ module.exports = {
                 const { isLoggedIn } = req;
                 res.render('login', { isLoggedIn, errorMessages, username });
             } else {
-                const token = generateToken(username, user._id);
+                const userId = user._id;
+                const data = {
+                    username,
+                    userId
+                };
+
+                const token = jwt.sign(data, config.secret);
                 res.cookie(TOKEN_KEY, token);
                 res.cookie(USERNAME, username);
                 res.redirect('/');
@@ -97,16 +103,16 @@ module.exports = {
                         errorMessages.push(error.errors[x].message);
                     });
                 }
-                
+
                 success = false;
             }
 
-            if(success) {
+            if (success) {
                 const data = {
                     username,
                     userId
                 };
-            
+
                 const token = jwt.sign(data, config.secret);
                 res.cookie(TOKEN_KEY, token);
                 res.cookie(USERNAME, username);
