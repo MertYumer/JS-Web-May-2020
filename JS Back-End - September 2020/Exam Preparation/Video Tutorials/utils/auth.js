@@ -1,6 +1,7 @@
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const controller = require('../controllers/users');
 const Course = require('../models/Course');
 const { TOKEN_KEY } = require('../controllers/constants');
@@ -45,10 +46,10 @@ const isCreatorCheck = async (req, res, next) => {
 
 	try {
 		const id = req.params.id;
-		const creatorId = await controller.getCreator(id);
-		const { userID } = jwt.decode(token, config.secret);
+		const { creatorId } = await Course.findById(id).select('creatorId');
+		const { userId } = jwt.decode(token, config.secret);
 
-		req.isCreator = creatorId === userID;
+		req.isCreator = creatorId === userId;
 	} catch (error) {
 		req.isCreator = false;
 	}

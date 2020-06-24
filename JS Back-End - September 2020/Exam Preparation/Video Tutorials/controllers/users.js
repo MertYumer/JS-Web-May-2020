@@ -47,6 +47,7 @@ module.exports = {
             if (!user) {
                 const { isLoggedIn } = req;
                 res.render('login', { isLoggedIn, errorMessages, username });
+                return;
             }
 
             const passwordIsCorrect = await bcryptjs.compare(password, user.password);
