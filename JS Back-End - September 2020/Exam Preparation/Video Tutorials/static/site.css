@@ -15,3 +15,7 @@
 .badge{
     margin-left:10px;
 }
+
+#notification-message{
+    background-color: red;
+}

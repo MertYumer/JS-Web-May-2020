@@ -11,7 +11,7 @@ module.exports = {
     INVALID_LOGIN_MESSAGE: 'Invalid username or password.',
     INCORRECT_NAME_MESSAGE: 'Name should contains only english letters, digits or white spaces.',
     INCORRECT_NAME_LENGTH_MESSAGE: 'Name should be at least 5 characters long',
-    INCORRECT_DESCRIPTION_LENGTH_MESSAGE: 'Description should be at least 20 characters long',
+    INCORRECT_DESCRIPTION_LENGTH_MESSAGE: 'Description should be at least 20 and no longer than 50 characters long',
     INCORRECT_DESCRIPTION_MESSAGE: 'Description should contains only english letters, digits or white spaces.',
     REQUIRED_USERNAME: 'Username is required',
     REQUIRED_PASSWORD: 'Password is required',
@@ -21,8 +21,9 @@ module.exports = {
 
     LETTERS_AND_DIGITS_PATTERN: /^[A-Za-z0-9]+$/,
     LETTERS_DIGITS_AND_WHITESPACE_PATTERN: /^[A-Za-z0-9\s]+$/,
-    PASSWORD_MIN_LENGTH: 8,
+    PASSWORD_MIN_LENGTH: 5,
     NAME_MIN_LENGTH: 5,
     DESCRIPTION_MIN_LENGTH: 20,
+    DESCRIPTION_MAX_LENGTH: 50,
     SALT_ROUNDS: 10
 };

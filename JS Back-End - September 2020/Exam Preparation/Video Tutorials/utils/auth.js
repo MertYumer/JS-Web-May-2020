@@ -2,6 +2,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
 const jwt = require('jsonwebtoken');
 const controller = require('../controllers/users');
+const Course = require('../models/Course');
 const { TOKEN_KEY } = require('../controllers/constants');
 
 const authenticationCheck = (req, res, next) => {
@@ -31,8 +32,8 @@ const anonymousRestriction = (req, res, next) => {
 };
 
 const getUserId = (token) => {
-	const { userID } = jwt.decode(token, config.secret);
-	return userID;
+	const { userId } = jwt.decode(token, config.secret);
+	return userId;
 };
 
 const isCreatorCheck = async (req, res, next) => {
@@ -43,8 +44,8 @@ const isCreatorCheck = async (req, res, next) => {
 	}
 
 	try {
-		const cubeId = req.params.id;
-		const creatorId = await controller.getCreator(cubeId);
+		const id = req.params.id;
+		const creatorId = await controller.getCreator(id);
 		const { userID } = jwt.decode(token, config.secret);
 
 		req.isCreator = creatorId === userID;
@@ -55,11 +56,31 @@ const isCreatorCheck = async (req, res, next) => {
 	next();
 };
 
+const isEnrolledCheck = async (req, res, next) => {
+	const token = req.cookies[TOKEN_KEY];
+
+	if (!token) {
+		req.isEnrolled = false;
+	}
+
+	try {
+		const courseId = req.params.id;
+		const { userId } = jwt.decode(token, config.secret);
+
+		const course = await Course.findById(courseId).populate('enrolledUsers').lean();
+		req.isEnrolled = course.enrolledUsers.some((x) => x._id.equals(mongoose.Types.ObjectId(userId)));
+	} catch (error) {
+		req.isEnrolled = false;
+	}
+
+	next();
+};
+
 const notCreatorRestriction = async (req, res, next) => {
 	try {
 		const token = req.cookies[TOKEN_KEY];
-		const cubeId = req.params.id;
-		const creatorId = await controller.getCreator(cubeId);
+		const id = req.params.id;
+		const creatorId = await controller.getCreator(id);
 		const { userID } = jwt.decode(token, config.secret);
 
 		if (creatorId === userID) {
@@ -77,5 +98,6 @@ module.exports = {
 	anonymousRestriction,
 	getUserId,
 	isCreatorCheck,
+	isEnrolledCheck,
 	notCreatorRestriction
 };
