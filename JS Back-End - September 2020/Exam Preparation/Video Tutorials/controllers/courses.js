@@ -117,11 +117,19 @@ module.exports = {
             const { title, description, imageUrl, checked } = req.body;
             const isPublic = !!checked;
 
+            const course = {
+                title,
+                description,
+                imageUrl,
+                isPublic
+            };
+
+            const errorMessages = [];
+
             try {
-                await Course.findByIdAndUpdate(courseId, courseObject);
-                res.render('edit-course', { isLoggedIn, username, title, description, imageUrl, isPublic, id });
+                await Course.findByIdAndUpdate(id, course);
+                res.redirect(`/course/details/${id}`);
             } catch (error) {
-                const errorMessages = [];
                 if (error.name === 'MongoError') {
                     errorMessages.push(COURSE_EXISTS_MESSAGE);
                 } else {
@@ -130,7 +138,7 @@ module.exports = {
                     });
                 }
 
-                res.redirect(`/course/details/${id}`);
+                res.render('course-edit', { isLoggedIn, username, title, description, imageUrl, isPublic, id, errorMessages });
             }
         }
     }

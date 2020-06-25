@@ -11,8 +11,10 @@ module.exports = {
 
 			if (coursesCountToDisplay) {
 				query = query
-					.sort({ enrolledUsers: -1 })
-					.limit(coursesCountToDisplay);
+					.sort(function (a, b) {
+						return b.enrolledUsers.length - a.enrolledUsers.length;
+					})
+					.slice(0, coursesCountToDisplay);
 			} else {
 				query = query
 					.sort(function (a, b) {
@@ -25,7 +27,7 @@ module.exports = {
 				.map(c => JSON.parse(c));
 
 			try {
-				res.render('home', { isLoggedIn, username, "courses": courses, search });
+				res.render('home', { isLoggedIn, username, courses, search });
 			} catch (error) {
 				next();
 			}

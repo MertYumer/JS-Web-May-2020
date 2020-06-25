@@ -14,7 +14,11 @@
             value="{{imageUrl}}">
     </div>
     <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="check-box" name="checked" checked="{{isPublic}}">
+        <input type="checkbox" class="form-check-input" id="check-box" name="checked" 
+        {{#if isPublic}}
+        checked
+        {{/if}}
+        >
         <label class="form-check-label" for="check-box">Public</label>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
